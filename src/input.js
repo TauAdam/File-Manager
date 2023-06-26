@@ -1,4 +1,6 @@
 import { createInterface } from 'readline'
+import { goToDirectory, goUp, listContents } from './navigation.js'
+import { handleInvalidInput } from './utils.js'
 
 export const readInput = username => {
   const rl = createInterface({
@@ -35,6 +37,9 @@ const handleInput = input => {
       break
     case 'ls':
       listContents()
+      break
+    default:
+      handleInvalidInput()
       break
   }
 }
