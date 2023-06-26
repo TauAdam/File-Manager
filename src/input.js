@@ -2,6 +2,7 @@ import { createInterface } from 'readline'
 import { printCurrentDirectory } from './fileManager.js'
 import { goToDirectory, goUp, listContents } from './navigation.js'
 import { handleInvalidInput } from './utils.js'
+import { handleOSCommand } from './os.js'
 
 export const readInput = username => {
   const rl = createInterface({
@@ -41,6 +42,9 @@ const handleInput = input => {
     case 'ls':
       listContents()
       printCurrentDirectory()
+      break
+    case 'os':
+      handleOSCommand(args[0])
       break
     default:
       handleInvalidInput()
