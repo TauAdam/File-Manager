@@ -1,22 +1,17 @@
 import { opendir } from 'fs/promises'
-import { resolve } from 'path'
-import { currentDirectory, printCurrentDirectory } from './fileManager.js'
 import { handleOperationFailure } from './utils.js'
 
 export const goUp = () => {
-  let parentDirectory
-  if (currentDirectory !== '/') {
-    parentDirectory = resolve(currentDirectory, '..')
+  try {
+    process.chdir('..')
+  } catch (error) {
+    handleOperationFailure()
   }
-  printCurrentDirectory(parentDirectory)
 }
 
 export const goToDirectory = path => {
-  const newPath = resolve(currentDirectory, path)
-
   try {
-    currentDirectory = newPath
-    printCurrentDirectory()
+    process.chdir(path)
   } catch {
     handleOperationFailure()
   }
@@ -24,7 +19,7 @@ export const goToDirectory = path => {
 
 export const listContents = async () => {
   try {
-    const dir = await opendir(currentDirectory)
+    const dir = await opendir(process.cwd())
     const files = []
     const folders = []
     for await (const entry of dir) {

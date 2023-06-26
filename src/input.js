@@ -1,4 +1,5 @@
 import { createInterface } from 'readline'
+import { printCurrentDirectory } from './fileManager.js'
 import { goToDirectory, goUp, listContents } from './navigation.js'
 import { handleInvalidInput } from './utils.js'
 
@@ -31,12 +32,15 @@ const handleInput = input => {
   switch (command) {
     case 'up':
       goUp()
+      printCurrentDirectory()
       break
     case 'cd':
       goToDirectory(args[0])
+      printCurrentDirectory()
       break
     case 'ls':
       listContents()
+      printCurrentDirectory()
       break
     default:
       handleInvalidInput()
