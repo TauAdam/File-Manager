@@ -9,6 +9,7 @@ import {
   removeFile,
   renameFile,
 } from './files.js'
+import { calcHash } from './hash.js'
 
 export const handleInput = async input => {
   const [command, ...args] = input.trim().split(' ')
@@ -43,6 +44,9 @@ export const handleInput = async input => {
       break
     case 'os':
       handleOSCommands(args[0])
+      break
+    case 'hash':
+      await calcHash(args[0])
       break
     default:
       handleInvalidInput()

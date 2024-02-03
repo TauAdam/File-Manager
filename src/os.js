@@ -4,7 +4,7 @@ import { handleInvalidInput } from './utils/warnings.js'
 export const handleOSCommands = command => {
   switch (command) {
     case '--EOL':
-      console.log(`EOL: ${os.EOL === '\n' ? '\\n' : '\\r\\n'}`)
+      console.log(`EOL: ${JSON.stringify(os.EOL)}`)
       break
     case '--cpus':
       console.log(`Overall amount of CPUS: ${os.cpus().length}`)
