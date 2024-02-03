@@ -5,7 +5,7 @@ import {
   copyFile,
   createFile,
   moveFile,
-  read,
+  readFile,
   removeFile,
   renameFile,
 } from './operations.js'
@@ -27,22 +27,22 @@ export const handleInput = async input => {
       handleOSCommands(args[0])
       break
     case 'cat':
-      await read(args[0])
+      await readFile(args[0])
       break
     case 'add':
       await createFile(args[0])
       break
     case 'cp':
-      copyFile(args[0], args[1])
+      await copyFile(args[0], args[1])
       break
     case 'mv':
-      moveFile(args[0], args[1])
+      await moveFile(args[0], args[1])
       break
     case 'rn':
-      renameFile(args[0], args[1])
+      await renameFile(args[0], args[1])
       break
     case 'rm':
-      removeFile(args[0])
+      await removeFile(args[0])
       break
     default:
       handleInvalidInput()

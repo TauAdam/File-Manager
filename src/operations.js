@@ -1,43 +1,37 @@
 import { createReadStream, createWriteStream } from 'fs'
-import { handleOperationFailure } from './utils/warnings.js'
 import { basename, dirname, join, resolve } from 'path'
 import { open, rename, unlink } from 'fs/promises'
 import { pipeline } from 'stream/promises'
 import { isFileExist } from './utils/isFileExist.js'
 
-const read = filePath => {
-  return new Promise((res, reject) => {
-    const stream = createReadStream(resolve(filePath), 'utf-8');
-    stream.on('data', chunk => {
-      console.log(chunk);
-    });
-    stream.on('error', err => {
-      handleOperationFailure();
-      reject(err);
-    });
-    stream.on('end', res);
-  });
-};
+const readFile = filePath => {
+  return new Promise((res, rej) => {
+    createReadStream(resolve(filePath), 'utf-8')
+      .pipe(process.stdout)
+      .on('error', rej)
+      .on('end', res)
+  })
+}
 
 const createFile = async fileName => {
-  let fd
-  try {
-    fd = await open(resolve(fileName), 'wx')
-  } catch {
-    handleOperationFailure()
-  } finally {
-    fd?.close()
-  }
+  return new Promise((res, rej) => {
+    createWriteStream(resolve(fileName), { flags: 'wx' })
+      .on('error', rej)
+      .on('close', res)
+      .close()
+  })
 }
 const copyFile = async (filePath, newDirPath) => {
   try {
-    const destinationPath = join(newDirPath, basename(filePath));
-    await isFileExist(destinationPath, handleOperationFailure)
+    const destinationPath = join(newDirPath, basename(filePath))
+    if (await isFileExist(destinationPath)) {
+      throw new Error('Destination file already exists')
+    }
     const readable = createReadStream(resolve(filePath))
     const writeable = createWriteStream(destinationPath)
     await pipeline(readable, writeable)
-  } catch {
-    handleOperationFailure()
+  } catch (error) {
+    throw new Error(error)
   }
 }
 
@@ -45,25 +39,28 @@ const moveFile = async (filePath, newDirPath) => {
   try {
     await copyFile(filePath, newDirPath)
     await unlink(resolve(filePath))
-  } catch {
-    handleOperationFailure()
+  } catch (error) {
+    throw new Error(error)
   }
 }
 const renameFile = async (filePath, newFilename) => {
   try {
     const directoryPath = dirname(resolve(filePath))
     const newFilePath = join(directoryPath, newFilename)
+    if (await isFileExist(newFilePath)) {
+      throw new Error('File with the new name already exists')
+    }
     await rename(resolve(filePath), newFilePath)
-  } catch {
-    handleOperationFailure()
+  } catch (error) {
+    throw new Error(error)
   }
 }
 
 const removeFile = async filePath => {
   try {
     await unlink(resolve(filePath))
-  } catch {
-    handleOperationFailure()
+  } catch (error) {
+    throw new Error(error)
   }
 }
-export { read, createFile, copyFile, removeFile, renameFile, moveFile }
+export { readFile, createFile, copyFile, removeFile, renameFile, moveFile }

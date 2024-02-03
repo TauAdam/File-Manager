@@ -1,7 +1,10 @@
 import os from 'os'
 import { handleInput } from './handler.js'
 import { createInterface } from 'readline'
-import { printCurrentDirectory } from './utils/warnings.js'
+import {
+  handleOperationFailure,
+  printCurrentDirectory,
+} from './utils/warnings.js'
 
 const args = process.argv.slice(2)
 const username =
@@ -27,6 +30,7 @@ rl.on('line', async input => {
       printCurrentDirectory()
       rl.prompt()
     } catch {
+      handleOperationFailure()
       rl.prompt()
     }
   }

@@ -1,10 +1,10 @@
-import { access} from 'fs/promises'
+import { access } from 'fs/promises'
 
-export const isFileExist = async (path, cb) =>{
-	try {
-		await access(path);
-		cb()
-		return;
-	} catch {
-	}
+export const isFileExist = async path => {
+  try {
+    await access(path)
+    return true
+  } catch {
+    return false
+  }
 }
