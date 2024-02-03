@@ -4,15 +4,15 @@ import { handleInvalidInput } from './utils/warnings.js'
 export const handleOSCommands = command => {
   switch (command) {
     case '--EOL':
-      console.log(`EOL: ${os.EOL}`)
+      console.log(`EOL: ${os.EOL === '\n' ? '\\n' : '\\r\\n'}`)
       break
     case '--cpus':
       console.log(`Overall amount of CPUS: ${os.cpus().length}`)
       const cpus = os.cpus().map(cpu => ({
         Model: cpu.model,
-        Speed: `${cpu.speed / 1000} GHz`
-      }));
-      console.table(cpus);
+        Speed: `${cpu.speed / 1000} GHz`,
+      }))
+      console.table(cpus)
       break
     case '--homedir':
       console.log(`Home directory: ${os.homedir()}`)
