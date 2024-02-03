@@ -1,22 +1,17 @@
 import { opendir } from 'fs/promises'
-import { handleOperationFailure } from './utils.js'
+import { handleOperationFailure } from './utils/warnings.js'
 
-export const goUp = () => {
+export const goToDirectory = directoryPath => {
   try {
-    process.chdir('..')
-  } catch (error) {
-    handleOperationFailure()
-  }
-}
-
-export const goToDirectory = path => {
-  try {
-    process.chdir(path)
+    process.chdir(directoryPath)
   } catch {
     handleOperationFailure()
   }
 }
 
+export const goUp = () => {
+  goToDirectory('..')
+}
 export const listContents = async () => {
   try {
     const dir = await opendir(process.cwd())
@@ -32,9 +27,7 @@ export const listContents = async () => {
     folders.sort((a, b) => a.Name.localeCompare(b.Name))
     files.sort((a, b) => a.Name.localeCompare(b.Name))
 
-    const contents = [...folders, ...files]
-    console.log('\n')
-    console.table(contents)
+    console.table([...folders, ...files])
   } catch {
     handleOperationFailure()
   }
