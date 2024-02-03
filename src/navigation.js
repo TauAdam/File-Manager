@@ -1,18 +1,17 @@
 import { opendir } from 'fs/promises'
-import { handleOperationFailure } from './utils/warnings.js'
 
-export const goToDirectory = directoryPath => {
+const goToDirectory = directoryPath => {
   try {
     process.chdir(directoryPath)
   } catch {
-    handleOperationFailure()
+    throw new Error()
   }
 }
 
-export const goUp = () => {
+const goUp = () => {
   goToDirectory('..')
 }
-export const listContents = async () => {
+const listContents = async () => {
   try {
     const dir = await opendir(process.cwd())
     const files = []
@@ -29,6 +28,7 @@ export const listContents = async () => {
 
     console.table([...folders, ...files])
   } catch {
-    handleOperationFailure()
+    throw new Error()
   }
 }
+export { goToDirectory, goUp, listContents }

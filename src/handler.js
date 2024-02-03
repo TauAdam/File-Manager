@@ -8,7 +8,7 @@ import {
   readFile,
   removeFile,
   renameFile,
-} from './operations.js'
+} from './files.js'
 
 export const handleInput = async input => {
   const [command, ...args] = input.trim().split(' ')
@@ -22,9 +22,6 @@ export const handleInput = async input => {
       break
     case 'ls':
       await listContents()
-      break
-    case 'os':
-      handleOSCommands(args[0])
       break
     case 'cat':
       await readFile(args[0])
@@ -43,6 +40,9 @@ export const handleInput = async input => {
       break
     case 'rm':
       await removeFile(args[0])
+      break
+    case 'os':
+      handleOSCommands(args[0])
       break
     default:
       handleInvalidInput()

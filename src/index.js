@@ -28,9 +28,9 @@ rl.on('line', async input => {
     try {
       await handleInput(input)
       printCurrentDirectory()
-      rl.prompt()
     } catch {
       handleOperationFailure()
+    } finally {
       rl.prompt()
     }
   }

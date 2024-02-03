@@ -1,15 +1,15 @@
 import { createReadStream, createWriteStream } from 'fs'
 import { basename, dirname, join, resolve } from 'path'
-import { open, rename, unlink } from 'fs/promises'
+import { rename, rm } from 'fs/promises'
 import { pipeline } from 'stream/promises'
 import { isFileExist } from './utils/isFileExist.js'
 
 const readFile = filePath => {
   return new Promise((res, rej) => {
     createReadStream(resolve(filePath), 'utf-8')
-      .pipe(process.stdout)
       .on('error', rej)
       .on('end', res)
+      .pipe(process.stdout)
   })
 }
 
@@ -38,7 +38,7 @@ const copyFile = async (filePath, newDirPath) => {
 const moveFile = async (filePath, newDirPath) => {
   try {
     await copyFile(filePath, newDirPath)
-    await unlink(resolve(filePath))
+    await removeFile(filePath)
   } catch (error) {
     throw new Error(error)
   }
@@ -58,7 +58,7 @@ const renameFile = async (filePath, newFilename) => {
 
 const removeFile = async filePath => {
   try {
-    await unlink(resolve(filePath))
+    await rm(resolve(filePath))
   } catch (error) {
     throw new Error(error)
   }
