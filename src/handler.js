@@ -12,116 +12,28 @@ import {
 import { calcHash } from './hash.js'
 import { compressFile, decompressFile } from './zip.js'
 
+const commands = {
+  up: { func: goUp, argCount: 0 },
+  cd: { func: goToDirectory, argCount: 1 },
+  ls: { func: listContents, argCount: 0 },
+  cat: { func: readFile, argCount: 1 },
+  add: { func: createFile, argCount: 1 },
+  cp: { func: copyFile, argCount: 2 },
+  mv: { func: moveFile, argCount: 2 },
+  rn: { func: renameFile, argCount: 2 },
+  rm: { func: removeFile, argCount: 1 },
+  os: { func: handleOSCommands, argCount: 1 },
+  hash: { func: calcHash, argCount: 1 },
+  compress: { func: compressFile, argCount: 2 },
+  decompress: { func: decompressFile, argCount: 2 },
+}
+
 export const handleInput = async input => {
   const [command, ...args] = input.trim().split(' ')
 
-  switch (command) {
-    case 'up':
-      if (args.length === 0) {
-        goUp()
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'cd':
-      if (args.length === 1) {
-        goToDirectory(args[0])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'ls':
-      if (args.length === 0) {
-        await listContents()
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'cat':
-      if (args.length === 1) {
-        await readFile(args[0])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'add':
-      if (args.length === 1) {
-        await createFile(args[0])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'cp':
-      if (args.length === 2) {
-        await copyFile(args[0], args[1])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'mv':
-      if (args.length === 2) {
-        await moveFile(args[0], args[1])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'rn':
-      if (args.length === 2) {
-        await renameFile(args[0], args[1])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'rm':
-      if (args.length === 1) {
-        await removeFile(args[0])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'os':
-      if (args.length === 1) {
-        handleOSCommands(args[0])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'hash':
-      if (args.length === 1) {
-        await calcHash(args[0])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'compress':
-      if (args.length === 2) {
-        await compressFile(args[0], args[1])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    case 'decompress':
-      if (args.length === 2) {
-        await decompressFile(args[0], args[1])
-        break
-      } else {
-        handleInvalidInput()
-        break
-      }
-    default:
-      handleInvalidInput()
-      break
+  if (commands[command] && args.length === commands[command].argCount) {
+    await commands[command].func(...args)
+  } else {
+    handleInvalidInput()
   }
 }
