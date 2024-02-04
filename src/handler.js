@@ -10,44 +10,116 @@ import {
   renameFile,
 } from './files.js'
 import { calcHash } from './hash.js'
+import { compressFile, decompressFile } from './zip.js'
 
 export const handleInput = async input => {
   const [command, ...args] = input.trim().split(' ')
 
   switch (command) {
     case 'up':
-      goUp()
-      break
+      if (args.length === 0) {
+        goUp()
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'cd':
-      goToDirectory(args[0])
-      break
+      if (args.length === 1) {
+        goToDirectory(args[0])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'ls':
-      await listContents()
-      break
+      if (args.length === 0) {
+        await listContents()
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'cat':
-      await readFile(args[0])
-      break
+      if (args.length === 1) {
+        await readFile(args[0])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'add':
-      await createFile(args[0])
-      break
+      if (args.length === 1) {
+        await createFile(args[0])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'cp':
-      await copyFile(args[0], args[1])
-      break
+      if (args.length === 2) {
+        await copyFile(args[0], args[1])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'mv':
-      await moveFile(args[0], args[1])
-      break
+      if (args.length === 2) {
+        await moveFile(args[0], args[1])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'rn':
-      await renameFile(args[0], args[1])
-      break
+      if (args.length === 2) {
+        await renameFile(args[0], args[1])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'rm':
-      await removeFile(args[0])
-      break
+      if (args.length === 1) {
+        await removeFile(args[0])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'os':
-      handleOSCommands(args[0])
-      break
+      if (args.length === 1) {
+        handleOSCommands(args[0])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     case 'hash':
-      await calcHash(args[0])
-      break
+      if (args.length === 1) {
+        await calcHash(args[0])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
+    case 'compress':
+      if (args.length === 2) {
+        await compressFile(args[0], args[1])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
+    case 'decompress':
+      if (args.length === 2) {
+        await decompressFile(args[0], args[1])
+        break
+      } else {
+        handleInvalidInput()
+        break
+      }
     default:
       handleInvalidInput()
       break

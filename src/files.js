@@ -2,7 +2,7 @@ import { createReadStream, createWriteStream } from 'fs'
 import { basename, dirname, join, resolve } from 'path'
 import { rename, rm } from 'fs/promises'
 import { pipeline } from 'stream/promises'
-import { isFileExist } from './utils/isFileExist.js'
+import { isFileExist } from './utils/exist.js'
 
 const readFile = filePath => {
   return new Promise((res, rej) => {
